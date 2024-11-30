@@ -24,6 +24,7 @@
 </body>
 <script>
   const LOCAL_STORAGE_KEY = 'how-old-is-x-people-list';
+  const FIRST_VISIT_KEY = 'how-old-is-x-first-visit';
   const peopleTable = document.getElementById('people');
 
   /**
@@ -90,6 +91,10 @@
       const removeButton = document.createElement('button');
       removeButton.textContent = 'Remove';
       removeButton.onclick = () => {
+        const confirm = window.confirm('Are you sure you want to remove this person?');
+        if (!confirm) {
+          return;
+        }
         const people = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
         const index = people.findIndex(p => p.name === person.name && p.birthday === person.birthday);
         people.splice(index, 1);
@@ -117,6 +122,16 @@
 
   const onLoad = () => {
     renderPeople();
+
+    const isFirstVisit = localStorage.getItem(FIRST_VISIT_KEY) === null;
+    if (isFirstVisit) {
+      localStorage.setItem(FIRST_VISIT_KEY, 'true');
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([
+        { name: 'Alice', birthday: '1990-01-01' },
+        { name: 'Bob', birthday: '1995-05-05' },
+      ]));
+      renderPeople();
+    }
   }
   document.addEventListener('DOMContentLoaded', onLoad);
 </script>
