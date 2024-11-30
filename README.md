@@ -6,4 +6,6 @@ Fixes the problem of trying to remember birthdays and calculate ages of friends/
 
 Just a static HTML site, nothing special to see here...
 
+UI is more optimized for mobile since that's the intended use case, desktop works but it's not as pretty
+
 **[Live site here](https://joshgrib.github.io/how-old-is-x/)**
