@@ -19,6 +19,7 @@
       <!--Filled in by JS-->
     </tbody>
   </table>
+  <button onclick="removeAllPeople()">Remove All People</button>
 </body>
 <script>
   const LOCAL_STORAGE_KEY = 'how-old-is-x-people-list';
@@ -99,6 +100,18 @@
 
       peopleListElem.appendChild(tr);
     }
+  }
+
+  /**
+   * Remove all people from the list.
+   */
+  const removeAllPeople = () => {
+    const confirm = window.confirm('Are you sure you want to remove all people?');
+    if (!confirm) {
+      return;
+    }
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    renderPeople();
   }
 
   const onLoad = () => {
