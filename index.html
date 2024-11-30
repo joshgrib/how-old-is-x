@@ -1,0 +1,109 @@
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <title>How Old Is X?</title>
+</head>
+<body>
+  <h1>How Old Is X?</h1>
+  <button onclick="addPerson()">Add Person</button>
+  <table id="people">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Birthday</th>
+        <th>Age</th>
+        <th>Remove Person</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!--Filled in by JS-->
+    </tbody>
+  </table>
+</body>
+<script>
+  const LOCAL_STORAGE_KEY = 'how-old-is-x-people-list';
+  const peopleTable = document.getElementById('people');
+
+  /**
+   * Add a person to the list of people.
+   */
+  const addPerson = () => {
+    const name = prompt('Enter the person\'s name');
+    const birthday = prompt('Enter the person\'s birthday');
+    if (!name || !birthday) {
+      return;
+    }
+    const person = { name, birthday };
+    const people = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+    people.push(person);
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(people));
+    renderPeople();
+  }
+
+  /**
+   * Calculate the age of a person based on their birthday.
+   * @param {string} birthday The birthday of the person.
+   * @returns {string} The age of the person as "Y years, M months, D days".
+   */
+  const calculateAge = (birthday) => {
+    const today = new Date();
+    const birthDate = new Date(birthday);
+    let years = today.getFullYear() - birthDate.getFullYear();
+    let months = today.getMonth() - birthDate.getMonth();
+    let days = today.getDate() - birthDate.getDate();
+    if (months < 0 || (months === 0 && days < 0)) {
+      years--;
+      months += 12;
+    }
+    if (days < 0) {
+      months--;
+      days += 30;
+    }
+    return `${years} years, ${months} months, ${days} days`;
+  }
+
+  /**
+   * Render the list of people to the table
+   */
+  const renderPeople = () => {
+    const peopleListElem = peopleTable.querySelector('tbody');
+    peopleListElem.innerHTML = '';
+    const people = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+
+    for (const person of people) {
+      const tr = document.createElement('tr');
+      const nameTd = document.createElement('td');
+      nameTd.textContent = person.name;
+      tr.appendChild(nameTd);
+
+      const birthdayTd = document.createElement('td');
+      birthdayTd.textContent = person.birthday;
+      tr.appendChild(birthdayTd);
+
+      const ageTd = document.createElement('td');
+      ageTd.textContent = calculateAge(person.birthday);
+      tr.appendChild(ageTd);
+
+      const removeTd = document.createElement('td');
+      const removeButton = document.createElement('button');
+      removeButton.textContent = 'Remove';
+      removeButton.onclick = () => {
+        const people = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || [];
+        const index = people.findIndex(p => p.name === person.name && p.birthday === person.birthday);
+        people.splice(index, 1);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(people));
+        renderPeople();
+      }
+      removeTd.appendChild(removeButton);
+      tr.appendChild(removeTd);
+
+      peopleListElem.appendChild(tr);
+    }
+  }
+
+  const onLoad = () => {
+    renderPeople();
+  }
+  document.addEventListener('DOMContentLoaded', onLoad);
+</script>
+</html>
