@@ -20,8 +20,11 @@
       <!--Filled in by JS-->
     </tbody>
   </table>
-  <button onclick="removeAllPeople()">Remove All People</button>
+  <button onclick="removeAllPeople()">
+    Remove All People
+  </button>
 </body>
+
 <script>
   const LOCAL_STORAGE_KEY = 'how-old-is-x-people-list';
   const FIRST_VISIT_KEY = 'how-old-is-x-first-visit';
@@ -62,7 +65,9 @@
       months--;
       days += 30;
     }
-    return `${years} years, ${months} months, ${days} days`;
+    const nextBirthday = new Date(today.getFullYear() + 1, birthDate.getMonth(), birthDate.getDate());
+    const daysUntilBirthday = Math.floor((nextBirthday - today) / (1000 * 60 * 60 * 24));
+    return `${years} years, ${months} months, ${days} days (in ${daysUntilBirthday} days)`;
   }
 
   /**
@@ -75,6 +80,7 @@
 
     for (const person of people) {
       const tr = document.createElement('tr');
+
       const nameTd = document.createElement('td');
       nameTd.textContent = person.name;
       tr.appendChild(nameTd);
@@ -133,6 +139,7 @@
       renderPeople();
     }
   }
+
   document.addEventListener('DOMContentLoaded', onLoad);
 </script>
 </html>
